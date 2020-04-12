@@ -1,5 +1,5 @@
 
-LIBLITMUS=/home/common_shared/litmus/liblitmus
+LIBLITMUS=../../litmus/liblitmus
 #JEVENTS=/home/common_shared/PAStime/PMU/pmu-tools/jevents
 
 all:

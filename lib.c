@@ -1,4 +1,4 @@
-#include "/home/common_shared/PAStime/pastime/lib.h"
+#include "lib.h"
 #include <time.h>
 
 int Progress_Pipe_ID = 0;
