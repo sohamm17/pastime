@@ -26,7 +26,7 @@
 #define TIME_METADATA_INDEXFILE "meta_index.info"
 #define PIPE_ID "/run/process_pipe"
 
-#define MEM_MODEL
+//#define MEM_MODEL
 
 #define CALL( exp ) do { \
   int ret; \
@@ -75,6 +75,7 @@ extern FILE *dataFile;
 extern ull start_time;
 
 static inline __attribute__((used, always_inline)) void setup_perf_counter() {
+#ifdef MEM_MODEL
     struct perf_event_attr load_attri, store_attri;
     // -- Load
     if (resolve_event("mem_inst_retired.all_loads", &load_attri) < 0) {
@@ -97,6 +98,7 @@ static inline __attribute__((used, always_inline)) void setup_perf_counter() {
     }
     
     printf("PERF Counter is set up.\n");
+#endif
 }
 
 // this function returns current time (from the epoch) in nanseconds
@@ -138,7 +140,7 @@ static inline __attribute__((used, always_inline)) void profilerStartTime() {
 // to a file named with `dataFileName`
 static inline __attribute__((used, always_inline)) void writeTime(int FN_ID, int BB_ID) {
   // -- TIME PROFILING --
-  //fprintf(dataFile, "#define CP_%d_%d %llu\n",FN_ID, BB_ID, (getTime() - start_time));
+  fprintf(dataFile, "#define CP_%d_%d %llu\n",FN_ID, BB_ID, (getTime() - start_time));
   
   #ifdef MEM_MODEL
   // -- MEM PROFILING --
@@ -155,10 +157,12 @@ static inline __attribute__((used, always_inline)) void writeTime(int FN_ID, int
 // data.
 static inline __attribute__((used, always_inline)) void endIteration(int FN_ID,
 int BB_ID) {
+#ifdef MEM_MODEL
   end_load_val = rdpmc_read(&load_ctx);
   end_store_val = rdpmc_read(&store_ctx);
   fprintf(dataFile, "FULL_MEM %llu\n", 
     (end_load_val - start_load_val) + (end_store_val - start_store_val));
+#endif
   fflush(dataFile);
 }
 
