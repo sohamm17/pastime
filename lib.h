@@ -243,30 +243,30 @@ cur_mem_access, ull ref_checkpoint_mem_access, ull ref_full_mem_access) {
     if(1) {\
       double extra;\
       lt_t prev_time, extra_cost;\
+      /* For MEM_MODEL
       ull mem_access_cp = (end_store_val - start_store_val) + (end_load_val -\
-      start_load_val);/*mem access until a checkpoint*/\
+      start_load_val);//mem access until a checkpoint
       double pr_lo = ((double) (params.exec_cost) / LO_MEM_ACCESS);\
       double pr_ref_cp = ((double) (ref_time) / CP_MEM_ACCESS);\
       double pr_cp = ((double) (cur_time) / mem_access_cp);\
       ull POST_CP_LO_MEM_ACCESS = LO_MEM_ACCESS - CP_MEM_ACCESS;\
       ull post_cp_pred_mem_access = ((double) POST_CP_LO_MEM_ACCESS / \
       CP_MEM_ACCESS) * mem_access_cp;\
+      */\
       /*printf("mem_access_cp: %llu pr_ref_cp: %.4f, pr_cp:%.4f, post_cp_pred: %llu\n",\
       mem_access_cp, pr_ref_cp, pr_cp, post_cp_pred_mem_access);\
       printf("mem_lag: %d, time_lag: %d\n", (pr_cp > pr_ref_cp),\
       (cur_time > ref_time));*/\
-      if(/*cur_time <= ref_time && */ pr_cp > pr_ref_cp) {\
-        /*printf("\tMem Extra Budget: %llu\n", (ull) ((pr_cp - pr_ref_cp) *\
-        (double)post_cp_pred_mem_access));*/\
+      /*if( pr_cp > pr_ref_cp) {\
         ull mem_extra_budget = (ull) ((pr_cp - pr_ref_cp) *\
-        (double)post_cp_pred_mem_access);\
+        (double)post_cp_pred_mem_access);*/\
         /*in case millisecond increase is noticed with memory lag*/\
-        if((params.exec_cost) < (params.exec_cost + mem_extra_budget)) {\
+        /*if((params.exec_cost) < (params.exec_cost + mem_extra_budget)) {\
           params.exec_cost += mem_extra_budget + us2ns(200);\
           printf("mem:budget asked: %llu\n", ns2ms(params.exec_cost));\
           CALL(set_rt_task_param(task_tid, &params));\
         }\
-      } else if(0 && cur_time > ref_time) {\
+      } else*/ if(1 && cur_time > ref_time) {\
         printf("SHOULD NOT COME HERE\n");\
         double extra;\
         lt_t prev_time, extra_cost;\
